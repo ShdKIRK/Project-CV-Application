@@ -1,71 +1,66 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
+import '../styles/GeneralInfo.css';
 
-export default function MyForm() {
-    const [formData, setFormData] = useState({
-        name: '',
-        email: '',
-        phone: ''
-    });
+const GeneralInfo = ({ onSubmit }) => {
+  const [info, setInfo] = useState({ name: '', email: '', phone: '' });
+  const [isEditing, setIsEditing] = useState(true);
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prevData => ({
-            ...prevData,
-            [name]: value
-        }));
-    };
+  const handleChange = (e) => {
+    setInfo({ ...info, [e.target.name]: e.target.value });
+  };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        // Handle form submission here
-        console.log(formData);
-    };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setIsEditing(false);
+    onSubmit(info);
+  };
 
-    return (
+  const handleEdit = () => {
+    setIsEditing(true);
+  };
+
+  return (
+    <div className="general-info">
+      {isEditing ? (
         <form onSubmit={handleSubmit}>
-            <div className="form-group">
-                <label htmlFor="name">
-                    Name:
-                    <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleChange}
-                        required
-                    />
-                </label>
-            </div>
-
-            <div className="form-group">
-                <label htmlFor="email">
-                    Email:
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        required
-                    />
-                </label>
-            </div>
-
-            <div className="form-group">
-                <label htmlFor="phone">
-                    Phone:
-                    <input
-                        type="tel"
-                        id="phone"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleChange}
-                        required
-                    />
-                </label>
-            </div>
-
-            <button type="submit">Submit</button>
+          <h2>General Information</h2>
+          <input
+            type="text"
+            name="name"
+            value={info.name}
+            onChange={handleChange}
+            placeholder="Name"
+            required
+          />
+          <input
+            type="email"
+            name="email"
+            value={info.email}
+            onChange={handleChange}
+            placeholder="Email"
+            required
+          />
+          <input
+            type="tel"
+            name="phone"
+            value={info.phone}
+            onChange={handleChange}
+            placeholder="Phone"
+            required
+          />
+          <button type="submit">Submit</button>
         </form>
-    );
-}
+      ) : (
+        <div>
+          <h2>General Information</h2>
+          <p>Name: {info.name}</p>
+          <p>Email: {info.email}</p>
+          <p>Phone: {info.phone}</p>
+          <button onClick={handleEdit}>Edit</button>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default GeneralInfo;
